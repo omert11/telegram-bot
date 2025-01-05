@@ -29,7 +29,7 @@ Telegram kanalları arasında mesaj aktarımı yapan ve fiyat güncellemesi yapa
 
 - Python 3.11+
 - Node.js 18+
-- Docker (opsiyonel)
+- Docker
 
 ## ⚙️ Kurulum
 
@@ -37,32 +37,18 @@ Telegram kanalları arasında mesaj aktarımı yapan ve fiyat güncellemesi yapa
 
 1. Projeyi klonlayın:
 
-```bash
-git clone https://github.com/username/telegram-bot-panel.git
-cd telegram-bot-panel
-```
+   ```bash
+   git clone https://github.com/username/telegram-bot-panel.git
+   cd telegram-bot-panel
+   ```
 
-2. .env dosyasını oluşturun:
+2. `start.sh` scriptini çalıştırın:
 
-```env
-ADMIN_PASSWORD=your_password
-API_ID=your_telegram_api_id
-API_HASH=your_telegram_api_hash
-PHONE_NUMBER=your_phone_number
-SOURCE_CHANNELS=["channel1", "channel2"]
-TARGET_CHANNEL=target_channel
-ADD_FEE=20
-GEMINI_API_KEY=your_gemini_api_key
-IS_ACTIVE=true
-INTERVAL_MINUTES=60
-```
+   ```bash
+   ./start.sh
+   ```
 
-3. Docker compose ile başlatın:
-
-```bash
-docker compose up -d
-```
-
+   Bu script gerekli dosyaları oluşturacak, Docker container'larını başlatacak ve uygulamayı çalıştıracaktır.
 
 ## 📱 Kullanım
 
@@ -94,7 +80,6 @@ Temel yapılandırma seçenekleri:
 | `TARGET_CHANNEL` | Hedef kanal | - |
 | `ADD_FEE` | Eklenecek komisyon | `0` |
 | `INTERVAL_MINUTES` | Çalışma aralığı (dakika) | `60` |
-
 
 ## 🙏 Teşekkürler
 
