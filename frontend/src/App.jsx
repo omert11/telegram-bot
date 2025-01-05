@@ -8,6 +8,7 @@ import { ConfigurationForm } from './components/ConfigurationForm';
 import Swal from 'sweetalert2';
 import { LoginForm } from './components/LoginForm';
 import { BotLoginStatus } from './components/BotLoginStatus';
+import { API_URL } from './config';
 
 function App() {
     const [status, setStatus] = useState(null);
@@ -20,7 +21,7 @@ function App() {
     );
     const [botStatus, setBotStatus] = useState(null);
 
-    const fetchWithAuth = async (url, options = {}) => {
+    const fetchWithAuth = async (endpoint, options = {}) => {
         const token = localStorage.getItem('auth_token');
         const headers = {
             ...options.headers,
@@ -28,7 +29,7 @@ function App() {
             'Content-Type': 'application/json',
         };
 
-        const response = await fetch(url, {
+        const response = await fetch(`${API_URL}${endpoint}`, {
             ...options,
             headers,
             mode: 'cors',
@@ -44,7 +45,7 @@ function App() {
 
     const fetchStatus = async () => {
         try {
-            const response = await fetchWithAuth('http://localhost:8000/api/status');
+            const response = await fetchWithAuth('/api/status');
             const data = await response.json();
             setStatus(data);
             setError(null);
@@ -55,7 +56,7 @@ function App() {
 
     const fetchConfig = async () => {
         try {
-            const response = await fetchWithAuth('http://localhost:8000/api/config');
+            const response = await fetchWithAuth('/api/config');
             const data = await response.json();
             setConfig(data);
             setError(null);
@@ -68,7 +69,7 @@ function App() {
 
     const fetchHistory = async () => {
         try {
-            const response = await fetchWithAuth('http://localhost:8000/api/history');
+            const response = await fetchWithAuth('/api/history');
             const data = await response.json();
             setHistory(data);
         } catch (err) {
@@ -209,7 +210,7 @@ function App() {
 
     const fetchBotStatus = async () => {
         try {
-            const response = await fetchWithAuth('http://localhost:8000/api/bot-status');
+            const response = await fetchWithAuth('/api/bot-status');
             const data = await response.json();
             setBotStatus(data.status);
         } catch (err) {
