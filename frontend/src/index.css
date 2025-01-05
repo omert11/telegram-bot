@@ -1,0 +1,30 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* SweetAlert2 özelleştirmeleri */
+.swal2-popup {
+    font-family: inherit;
+    border-radius: 1rem;
+}
+
+.swal2-title {
+    font-size: 1.5rem !important;
+    font-weight: 600 !important;
+}
+
+.swal2-html-container {
+    font-size: 1rem !important;
+}
+
+.swal2-confirm {
+    padding: 0.5rem 1.5rem !important;
+    font-size: 1rem !important;
+    font-weight: 500 !important;
+}
+
+.swal2-cancel {
+    padding: 0.5rem 1.5rem !important;
+    font-size: 1rem !important;
+    font-weight: 500 !important;
+}

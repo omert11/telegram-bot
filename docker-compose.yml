@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  backend:
+    build: 
+      context: .
+      dockerfile: backend/Dockerfile
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./bot.db:/app/bot.db
+      - ./bot.session:/app/bot.session
+      - ./bot.log:/app/bot.log
+      - ./.env:/app/.env
+    environment:
+      - TZ=Europe/Istanbul
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: frontend
+      dockerfile: Dockerfile
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    restart: unless-stopped
+
+volumes:
+  db_data: 
