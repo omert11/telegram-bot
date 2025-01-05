@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { API_URL } from '../config';
 
 export function BotLoginStatus({ status, onLogin }) {
     const [showCodeInput, setShowCodeInput] = useState(false);
@@ -9,7 +10,7 @@ export function BotLoginStatus({ status, onLogin }) {
     const handleLogin = async () => {
         if (!showCodeInput) {
             try {
-                const response = await fetch('http://localhost:8000/api/login', {
+                const response = await fetch(`${API_URL}//api/login`, {
                     method: 'GET'
                 });
 
@@ -29,7 +30,7 @@ export function BotLoginStatus({ status, onLogin }) {
         setError('');
 
         try {
-            const response = await fetch('http://localhost:8000/api/login', {
+            const response = await fetch(`${API_URL}/api/login`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { API_URL } from '../config';
 
 export function LoginForm({ onLogin }) {
     const [password, setPassword] = useState('');
@@ -11,7 +12,7 @@ export function LoginForm({ onLogin }) {
         setError('');
 
         try {
-            const response = await fetch('http://localhost:8000/api/auth', {
+            const response = await fetch(`${API_URL}/api/auth`, {
                 method: 'POST',
                 headers: {
                     'Authorization': `Basic ${btoa(`:${password}`)}`,

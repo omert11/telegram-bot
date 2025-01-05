@@ -80,7 +80,7 @@ function App() {
     const handleProcess = async () => {
         setLoading(true);
         try {
-            const response = await fetch('http://localhost:8000/api/process', {
+            const response = await fetch(`${API_URL}/api/process`, {
                 method: 'POST',
             });
             const data = await response.json();
@@ -133,7 +133,7 @@ function App() {
 
         setLoading(true);
         try {
-            const response = await fetch('http://localhost:8000/api/config/bulk', {
+            const response = await fetch(`${API_URL}/api/config/bulk`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -161,7 +161,7 @@ function App() {
 
     const handleToggle = async () => {
         try {
-            const response = await fetch('http://localhost:8000/api/toggle', {
+            const response = await fetch(`${API_URL}/api/toggle`, {
                 method: 'POST',
             });
             const data = await response.json();
@@ -189,7 +189,7 @@ function App() {
         if (!confirmed) return;
 
         try {
-            const response = await fetch('http://localhost:8000/api/reset', {
+            const response = await fetch(`${API_URL}/api/reset`, {
                 method: 'POST',
             });
             const data = await response.json();
