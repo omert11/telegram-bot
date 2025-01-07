@@ -171,7 +171,7 @@ def get_last_message_id(channel: str) -> int:
             "SELECT last_message_id FROM last_messages WHERE channel_id = ?", (channel,)
         )
         row = cursor.fetchone()
-        return row["last_message_id"] if row else 0
+        return row["last_message_id"] if row else -1
 
 
 def update_last_message_id(channel: str, message_id: int) -> None:

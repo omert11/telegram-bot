@@ -4,8 +4,6 @@ from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
 from .routes import router
 from ..db import init_db, init_default_config
-from fastapi.staticfiles import StaticFiles
-import os
 from ..logger import logger
 import asyncio
 from ..scheduler import scheduler
@@ -56,10 +54,6 @@ app.add_middleware(
 
 # Include routes
 app.include_router(router, prefix="/api")
-
-frontend_path: str = os.path.join(os.path.dirname(__file__), "../../frontend/dist")
-if os.path.exists(frontend_path):
-    app.mount("/", StaticFiles(directory=frontend_path, html=True), name="frontend")
 
 
 @app.middleware("http")

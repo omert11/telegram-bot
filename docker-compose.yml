@@ -9,7 +9,6 @@ services:
       - "8000:8000"
     volumes:
       - ./bot.db:/app/bot.db
-      - ./bot.session:/app/bot.session
       - ./bot.log:/app/bot.log
       - ./.env:/app/.env
     environment:

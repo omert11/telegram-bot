@@ -20,6 +20,7 @@ function App() {
         !!localStorage.getItem('auth_token')
     );
     const [botStatus, setBotStatus] = useState(null);
+    const [isBotStatusLoading, setIsBotStatusLoading] = useState(true);
 
     const fetchWithAuth = async (endpoint, options = {}) => {
         const token = localStorage.getItem('auth_token');
@@ -210,27 +211,54 @@ function App() {
 
     const fetchBotStatus = async () => {
         try {
+            setIsBotStatusLoading(true);
             const response = await fetchWithAuth('/api/bot-status');
             const data = await response.json();
             setBotStatus(data.status);
         } catch (err) {
             console.error('Failed to fetch bot status:', err);
+        } finally {
+            setIsBotStatusLoading(false);
         }
     };
 
+    let lastAuthStatus;
     useEffect(() => {
+        if (lastAuthStatus === isAuthenticated) {
+            return;
+        }
+        lastAuthStatus = isAuthenticated;
+        let interval;
+
+        const fetchData = async () => {
+            if (isAuthenticated) {
+                await Promise.all([
+                    fetchBotStatus(),
+                    fetchStatus(),
+                    fetchConfig(),
+                    fetchHistory()
+                ]);
+            }
+        };
+
+        // İlk yükleme
+        fetchData();
+
+        // Periyodik güncelleme
         if (isAuthenticated) {
-            fetchBotStatus();
-            fetchStatus();
-            fetchConfig();
-            fetchHistory();
-            const interval = setInterval(() => {
+            interval = setInterval(() => {
                 fetchStatus();
                 fetchHistory();
             }, 30000);
-            return () => clearInterval(interval);
         }
-    }, [isAuthenticated]);
+
+        // Cleanup function
+        return () => {
+            if (interval) {
+                clearInterval(interval);
+            }
+        };
+    }, [isAuthenticated]); // Sadece isAuthenticated değiştiğinde çalışsın
 
     if (!isAuthenticated) {
         return <LoginForm onLogin={() => setIsAuthenticated(true)} />;
@@ -238,6 +266,8 @@ function App() {
 
     if (loading) return <LoadingSpinner />;
     if (error) return <ErrorMessage message={error} />;
+
+    if (isBotStatusLoading) return <LoadingSpinner />;
 
     if (botStatus !== 'logged_in') {
         return (

@@ -10,7 +10,7 @@ export function BotLoginStatus({ status, onLogin }) {
     const handleLogin = async () => {
         if (!showCodeInput) {
             try {
-                const response = await fetch(`${API_URL}//api/login`, {
+                const response = await fetch(`${API_URL}/api/login`, {
                     method: 'GET'
                 });
 

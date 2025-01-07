@@ -36,9 +36,14 @@ async def process_channel(client: TelegramClient, channel: str) -> None:
         logger.info(f"Processing channel: {channel}")
         last_message_id = get_last_message_id(channel)
 
-        messages: List[Message] = await client.get_messages(
-            channel, limit=20, min_id=last_message_id
-        )
+        kwargs = {
+            "limit": 20,
+        }
+
+        if last_message_id != -1:
+            kwargs["min_id"] = last_message_id
+
+        messages: List[Message] = await client.get_messages(channel, **kwargs)
 
         if not messages:
             logger.info(f"No new messages in channel: {channel}")

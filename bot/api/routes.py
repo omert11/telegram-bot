@@ -129,7 +129,7 @@ async def authenticate(
 async def get_bot_login_status() -> MessageResponse:
     """Get bot login status"""
     try:
-        is_logged = is_bot_logged()
+        is_logged = await is_bot_logged()
         return MessageResponse(
             status="logged_in" if is_logged else "not_logged",
             message="Bot giriş yapmış" if is_logged else "Bot giriş yapmamış",

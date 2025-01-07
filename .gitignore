@@ -28,8 +28,8 @@ wheels/
 *.db
 *.session
 *.session-journal
-bot.session
-bot.session-journal
+.session
+.session-journal
 
 # Logs
 *.log

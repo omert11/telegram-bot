@@ -49,14 +49,14 @@ def get_next_run_time_message(config: BotConfig) -> str:
     return "Bot aktif değil"
 
 
-def get_bot_runable() -> bool:
+async def get_bot_runable() -> bool:
     """Check if bot should run now"""
     config = get_config(force=True)
 
     if not config.is_active:
         return False
 
-    if not is_bot_logged():
+    if not await is_bot_logged():
         return False
 
     last_run = get_last_run_by_type("process")

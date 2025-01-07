@@ -7,7 +7,6 @@ NC='\033[0m'
 echo -e "${YELLOW}Telegram Bot Panel Başlatılıyor...${NC}"
 
 touch bot.db
-touch bot.session
 touch bot.log
 
 if [ ! -f .env ]; then
@@ -21,12 +20,12 @@ SOURCE_CHANNELS=["channel1", "channel2"]
 TARGET_CHANNEL=target_channel
 ADD_FEE=20
 GEMINI_API_KEY=your_gemini_api_key
-IS_ACTIVE=true
+IS_ACTIVE=false
 INTERVAL_MINUTES=60
 EOL
 fi
 
-chmod 666 bot.db bot.session bot.log .env
+chmod 666 bot.db bot.log .env
 
 echo -e "${GREEN}Docker container'ları başlatılıyor...${NC}"
 docker compose up --build -d

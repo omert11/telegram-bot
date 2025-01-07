@@ -1,6 +1,4 @@
-import os
 from telethon import TelegramClient
-from telethon.sessions import StringSession
 from telethon.errors import SessionPasswordNeededError, PhoneCodeExpiredError
 from .config import get_config
 from .logger import logger
@@ -8,32 +6,12 @@ from fastapi import HTTPException
 from .db import save_phone_code_hash, get_phone_code_hash, clear_phone_code_hash
 
 _client_instance: TelegramClient | None = None
-SESSION_FILE = os.path.join(os.path.dirname(os.path.dirname(__file__)), "bot.session")
 
 
-def _read_session() -> str | None:
-    """Read session string from file"""
-    if not os.path.exists(SESSION_FILE) or os.path.getsize(SESSION_FILE) == 0:
-        return None
-
-    with open(SESSION_FILE, "r") as f:
-        return f.read() or None
-
-
-def _save_session(session_str: str) -> None:
-    """Save session string to file"""
-    with open(SESSION_FILE, "w") as f:
-        f.write(session_str)
-
-
-def _create_client(session: str | None = None) -> TelegramClient:
+def _create_client() -> TelegramClient:
     """Create new Telegram client instance"""
     config = get_config()
-    return TelegramClient(
-        StringSession(session) if session else StringSession(),
-        config.api_id,
-        config.api_hash,
-    )
+    return TelegramClient("message_bot", config.api_id, config.api_hash)
 
 
 async def _handle_sign_in(client: TelegramClient, phone_code: str) -> None:
@@ -71,17 +49,15 @@ async def _request_code(client: TelegramClient) -> None:
     logger.info(f"Please check your Telegram app on {config.phone_number}")
 
 
-def is_bot_logged() -> bool:
+async def is_bot_logged() -> bool:
     """Check if bot is logged in by looking for session file"""
     try:
-        session_str = _read_session()
-        if not session_str:
-            return False
-
-        client = _create_client(session_str)
+        client = _create_client()
         try:
-            client.connect()
-            return client.is_user_authorized()
+            await client.connect()
+            is_logged = await client.is_user_authorized()
+            await client.disconnect()
+            return is_logged
         except Exception as e:
             logger.error(f"Error checking session: {e}")
             return False
@@ -95,12 +71,14 @@ async def send_login_code() -> None:
     """Send login code to bot"""
     global _client_instance
 
+    if await is_bot_logged():
+        return
+
     if not _client_instance:
         _client_instance = _create_client()
         await _client_instance.connect()
 
-    if not is_bot_logged():
-        await _request_code(_client_instance)
+    await _request_code(_client_instance)
 
 
 async def login_bot_with_code(phone_code: str) -> None:
@@ -111,8 +89,6 @@ async def login_bot_with_code(phone_code: str) -> None:
         raise Exception("Please send code first")
 
     await _handle_sign_in(_client_instance, phone_code)
-    session_str = StringSession.save(_client_instance.session)
-    _save_session(session_str or "")
     clear_phone_code_hash()
     await _client_instance.disconnect()
     _client_instance = None
@@ -121,7 +97,7 @@ async def login_bot_with_code(phone_code: str) -> None:
 async def get_client() -> TelegramClient:
     """Get Telegram client instance"""
 
-    if not is_bot_logged():
+    if not await is_bot_logged():
         raise Exception("Please login first")
 
     client = _create_client()

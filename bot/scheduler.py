@@ -43,10 +43,10 @@ async def scheduler() -> None:
 
     while True:
         try:
-            if get_bot_runable():
+            if await get_bot_runable():
                 await run_bot()
             else:
                 logger.info("Bot is not runable, skipping run")
         except Exception as e:
             logger.error(f"Scheduler error: {e}")
-        await asyncio.sleep(10)
+        await asyncio.sleep(60)
